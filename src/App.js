@@ -45,7 +45,7 @@ function App() {
   ];
 
   return (
-    <Router basename="/mma-forum/">
+    <Router basename="/">
       <nav>
         <Link to="/">Home</Link>
         {path.map((p) => (

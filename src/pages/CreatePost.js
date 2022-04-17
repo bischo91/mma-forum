@@ -40,7 +40,7 @@ export default function CreatePost({ category }) {
 
   return (
     <div>
-      <h1>Create A Post</h1>
+      <h1>Create Aaa Post</h1>
       <div>
         <label>Title: </label>
         <input placeholder="Title" onChange={(e) => setTitle(e.target.value)} />

@@ -9,36 +9,76 @@ import Equipment from "./pages/Equipment";
 import Fights from "./pages/Fights";
 import Others from "./pages/Others";
 import Login from "./pages/Login";
+import CreatePost from "./pages/CreatePost";
+import ViewPost from "./pages/ViewPost";
+
+import { auth, provider } from "./firebase-config";
+import { signInWithPopup, signOut } from "firebase/auth";
 
 function App() {
   const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
+
+  const signInWithGoogle = () => {
+    // Sign in with Google popup
+    signInWithPopup(auth, provider).then((result) => {
+      // Verify authentication
+      setIsAuth(true);
+      //   Identify if logged in with local storage
+      localStorage.setItem("isAuth", true);
+      console.log("logged in");
+      console.log(auth.currentUser);
+      // navigate("/");
+    });
+  };
+
+  const signUserOut = () => {
+    signOut(auth).then((result) => {
+      localStorage.clear();
+      setIsAuth(false);
+      console.log("logged out");
+    });
+  };
+
+  // const routes = {
+  //   path: ["general", "striking", "grappling", "equipment", "fights", "others"],
+  // }
+  const path = [
+    "general",
+    "striking",
+    "grappling",
+    "equipment",
+    "fights",
+    "others",
+  ];
 
   return (
     <Router>
       <nav>
         <Link to="/">Home</Link>
-        <Link to="/general">General</Link>
-        <Link to="/striking">Striking</Link>
-        <Link to="/grappling">Grappling</Link>
-        <Link to="/equipment">Equipment</Link>
-        <Link to="/fights">Fights</Link>
-        <Link to="/others">Others</Link>
+        {path.map((p) => (
+          <Link to={`/${p}`}>{p.slice(0, 1).toUpperCase() + p.slice(1)}</Link>
+        ))}
       </nav>
       <div>
-        <Link to="/login">Log In</Link>
+        {!isAuth ? (
+          <button onClick={signInWithGoogle}>Log In</button>
+        ) : (
+          <button onClick={signUserOut}>Log Out</button>
+        )}
       </div>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/general" element={<General />} />
-        <Route path="/striking" element={<Striking />} />
-        <Route path="/grappling" element={<Grappling />} />
-        <Route path="/equipment" element={<Equipment />} />
-        <Route path="/fights" element={<Fights />} />
-        <Route path="/others" element={<Others />} />
-        <Route path="/login" element={<Login />} />
+        {path.map((p) => (
+          <>
+            <Route
+              path={`/${p}/createpost`}
+              element={<CreatePost category={p} />}
+            />
+            <Route path={`/${p}`} element={<ViewPost category={p} />} />
+          </>
+        ))}
       </Routes>
     </Router>
   );
 }
-
 export default App;

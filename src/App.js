@@ -2,13 +2,6 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useState } from "react";
 import Home from "./pages/Home";
-import General from "./pages/General";
-import Striking from "./pages/Striking";
-import Grappling from "./pages/Grappling";
-import Equipment from "./pages/Equipment";
-import Fights from "./pages/Fights";
-import Others from "./pages/Others";
-import Login from "./pages/Login";
 import CreatePost from "./pages/CreatePost";
 import ViewPost from "./pages/ViewPost";
 
@@ -52,7 +45,7 @@ function App() {
   ];
 
   return (
-    <Router>
+    <Router basename="/mma-forum/">
       <nav>
         <Link to="/">Home</Link>
         {path.map((p) => (

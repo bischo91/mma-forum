@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, FieldValue } from "firebase/firestore";
 import { db, auth } from "../firebase-config";
 
 export default function CreatePost({ category }) {
@@ -29,7 +29,7 @@ export default function CreatePost({ category }) {
       title,
       content,
       author: { name: auth.currentUser.displayName, id: auth.currentUser.uid },
-      category,
+      timestamp: new Date().toLocaleString(),
     });
 
     // console.log("/" + from);

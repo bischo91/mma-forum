@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useState } from "react";
 import Home from "./pages/Home";
 import CreatePost from "./pages/CreatePost";
@@ -45,7 +45,7 @@ function App() {
   ];
 
   return (
-    <Router basename="/mma-forum">
+    <Router>
       <nav>
         <Link to="/">Home</Link>
         {path.map((p) => (

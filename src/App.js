@@ -49,7 +49,7 @@ function App() {
       <nav>
         <Link to="/">Home</Link>
         {path.map((p) => (
-          <Link to={`${p}`}>{p.slice(0, 1).toUpperCase() + p.slice(1)}</Link>
+          <Link to={`/${p}`}>{p.slice(0, 1).toUpperCase() + p.slice(1)}</Link>
         ))}
       </nav>
       <div>
@@ -64,10 +64,10 @@ function App() {
         {path.map((p) => (
           <>
             <Route
-              path={`${p}/createpost`}
+              path={`/${p}/createpost`}
               element={<CreatePost category={p} />}
             />
-            <Route path={`${p}`} element={<ViewPost category={p} />} />
+            <Route path={`/${p}`} element={<ViewPost category={p} />} />
           </>
         ))}
       </Routes>

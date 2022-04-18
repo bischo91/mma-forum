@@ -1,55 +1,42 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { getDoc, doc } from "firebase/firestore";
+import { db } from "../firebase-config";
 
-import { Link } from "react-router-dom";
-import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
-import { db, auth } from "../firebase-config";
+export default function ViewPost() {
+  const [postContent, setPostContent] = useState({
+    title: "",
+    author: { name: "", id: "" },
+    timestamp: "",
+    content: "",
+  });
+  //   const [author, setAuthor] = useState("");
+  const location = useLocation();
+  const category = "forum-" + location.pathname.split("/")[1];
+  const id = location.pathname.split("/")[2];
 
-export default function ViewPost({ category }) {
-  const [contentList, setContentList] = useState([]);
-  const collectionRef = collection(db, "forum-" + category);
-
-  const uid = auth.currentUser ? auth.currentUser.uid : "";
-
-  const getContent = async () => {
-    const data = await getDocs(collectionRef);
-    setContentList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    console.log(data.docs[0].data());
-  };
-
-  const deleteContent = async (id) => {
-    const contentDoc = doc(db, "forum-" + category, id);
-    await deleteDoc(contentDoc);
-    getContent();
+  const getPost = async () => {
+    const data = await getDoc(doc(db, category, id));
+    setPostContent({
+      title: data.data().title,
+      author: data.data().author,
+      timestamp: data.data().timestamp,
+      content: data.data().content,
+    });
+    // setAuthor(data.data().author.name);
   };
 
   useEffect(() => {
-    getContent();
-  }, [category]);
+    getPost();
+    console.log(postContent);
+  }, [postContent]);
 
   return (
     <div>
-      {contentList.map((post) => {
-        return (
-          <div>
-            <div>{post.title}</div>
-            <div>{post.author.name}</div>
-            <div>{post.timestamp}</div>
-            {uid === post.author.id && (
-              <div>
-                <button onClick={() => deleteContent(post.id)}>delete</button>
-              </div>
-            )}
-          </div>
-        );
-      })}
-      <Link
-        to={`/${category}/createpost`}
-        state={{ forumType: `forum-${category}` }}
-      >
-        Post
-      </Link>
+      <div>{postContent.title}</div>
+      <div>{postContent.timestamp}</div>
+      <div>{postContent.author.name}</div>
+      <div>{postContent.content}</div>
     </div>
   );
 }
-
-// state={{ forumType: "forum-general", from: "general" }}

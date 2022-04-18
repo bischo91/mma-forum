@@ -3,6 +3,7 @@ import { HashRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useState } from "react";
 import Home from "./pages/Home";
 import CreatePost from "./pages/CreatePost";
+import ViewPostList from "./pages/ViewPostList";
 import ViewPost from "./pages/ViewPost";
 
 import { auth, provider } from "./firebase-config";
@@ -67,7 +68,8 @@ function App() {
               path={`/${p}/createpost`}
               element={<CreatePost category={p} />}
             />
-            <Route path={`/${p}`} element={<ViewPost category={p} />} />
+            <Route path={`/${p}`} element={<ViewPostList category={p} />} />
+            <Route path={`/${p}/:id`} element={<ViewPost />} />
           </>
         ))}
       </Routes>

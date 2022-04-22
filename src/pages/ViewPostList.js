@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { db, auth } from "../firebase-config";
 import { PropTypes } from "prop-types";
+
 import {
   Table,
   TableBody,
@@ -16,6 +17,7 @@ import {
   Paper,
   IconButton,
   Box,
+  Button,
 } from "@mui/material/";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
@@ -117,6 +119,7 @@ export default function ViewPostList({ category }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(25);
 
+  const navigate = useNavigate();
   const collectionRef = collection(db, "forum-" + category);
 
   const uid = auth.currentUser ? auth.currentUser.uid : "";
@@ -204,7 +207,6 @@ export default function ViewPostList({ category }) {
                           style={{ height: "2rem" }}
                         >
                           <Link to={`/${category}/${row.id}`}>{row.title}</Link>
-                          ;
                           {uid === row.author.id && (
                             <IconButton>
                               <DeleteIcon
@@ -244,12 +246,14 @@ export default function ViewPostList({ category }) {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-          <Link
-            to={`/${category}/createpost`}
-            state={{ forumType: `forum-${category}` }}
+          <Button
+            variant="contained"
+            onClick={() => {
+              navigate(`/${category}/createpost`);
+            }}
           >
-            <button>Post</button>
-          </Link>
+            Post
+          </Button>
         </Paper>
       </Box>
     </div>

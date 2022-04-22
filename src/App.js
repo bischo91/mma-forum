@@ -8,6 +8,7 @@ import ViewPost from "./pages/ViewPost";
 
 import { auth, provider } from "./firebase-config";
 import { signInWithPopup, signOut } from "firebase/auth";
+import { Button } from "@mui/material";
 
 function App() {
   const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
@@ -55,9 +56,13 @@ function App() {
       </nav>
       <div>
         {!isAuth ? (
-          <button onClick={signInWithGoogle}>Log In</button>
+          <Button variant="contained" onClick={signInWithGoogle}>
+            Log In
+          </Button>
         ) : (
-          <button onClick={signUserOut}>Log Out</button>
+          <Button variant="contained" onClick={signUserOut}>
+            Log Out
+          </Button>
         )}
       </div>
       <Routes>

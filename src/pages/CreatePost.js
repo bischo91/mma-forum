@@ -77,3 +77,5 @@ export default function CreatePost({ category }) {
     </Box>
   );
 }
+
+// npm run deploy

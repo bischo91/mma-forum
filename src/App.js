@@ -8,7 +8,8 @@ import ViewPost from "./pages/ViewPost";
 
 import { auth, provider } from "./firebase-config";
 import { signInWithPopup, signOut } from "firebase/auth";
-import { Button } from "@mui/material";
+import { Button, Box, Grid } from "@mui/material";
+import { display } from "@mui/system";
 
 function App() {
   const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
@@ -46,25 +47,53 @@ function App() {
     "others",
   ];
 
+  const navLink = {
+    textDecoration: "none",
+    margin: "1rem",
+    display: "inline-flex",
+    color: "green",
+    marginLeft: "5vw",
+  };
+
   return (
     <Router>
-      <nav>
-        <Link to="/">Home</Link>
-        {path.map((p) => (
-          <Link to={`/${p}`}>{p.slice(0, 1).toUpperCase() + p.slice(1)}</Link>
-        ))}
-      </nav>
-      <div>
-        {!isAuth ? (
-          <Button variant="contained" onClick={signInWithGoogle}>
-            Log In
-          </Button>
-        ) : (
-          <Button variant="contained" onClick={signUserOut}>
-            Log Out
-          </Button>
-        )}
-      </div>
+      <Grid justifyContent="space-between" container>
+        <Grid item>LOGO</Grid>
+
+        <Grid item>
+          <nav
+            style={{
+              backgroundColor: "grey",
+              display: "flex",
+              width: "70vw",
+              height: "5vh",
+              justifyContent: "space-around",
+            }}
+          >
+            <Link to="/" style={navLink}>
+              Home
+            </Link>
+            {path.map((p) => (
+              <Link to={`/${p}`} style={navLink}>
+                {p.slice(0, 1).toUpperCase() + p.slice(1)}
+              </Link>
+            ))}
+          </nav>
+        </Grid>
+        <Grid item>
+          <Box component="div" height="75%" my="auto">
+            {!isAuth ? (
+              <Button variant="contained" onClick={signInWithGoogle}>
+                Log In
+              </Button>
+            ) : (
+              <Button variant="contained" onClick={signUserOut}>
+                Log Out
+              </Button>
+            )}
+          </Box>
+        </Grid>
+      </Grid>
       <Routes>
         <Route path="/" element={<Home />} />
         {path.map((p) => (

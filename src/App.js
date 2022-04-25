@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import CreatePost from "./pages/CreatePost";
 import ViewPostList from "./pages/ViewPostList";
 import ViewPost from "./pages/ViewPost";
+import EditPost from "./pages/EditPost";
 
 import { auth, provider } from "./firebase-config";
 import { signInWithPopup, signOut } from "firebase/auth";
@@ -14,6 +15,7 @@ import { display } from "@mui/system";
 function App() {
   const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
 
+  // Firebase Auth Sign In and Sign Out
   const signInWithGoogle = () => {
     // Sign in with Google popup
     signInWithPopup(auth, provider).then((result) => {
@@ -35,9 +37,6 @@ function App() {
     });
   };
 
-  // const routes = {
-  //   path: ["general", "striking", "grappling", "equipment", "fights", "others"],
-  // }
   const path = [
     "general",
     "striking",
@@ -59,7 +58,6 @@ function App() {
     <Router>
       <Grid justifyContent="space-between" container>
         <Grid item>LOGO</Grid>
-
         <Grid item>
           <nav
             style={{
@@ -104,6 +102,7 @@ function App() {
             />
             <Route path={`/${p}`} element={<ViewPostList category={p} />} />
             <Route path={`/${p}/:id`} element={<ViewPost />} />
+            <Route path={`/${p}/:id/edit`} element={<EditPost />} />
           </>
         ))}
       </Routes>

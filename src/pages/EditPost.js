@@ -1,45 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { addDoc, collection } from "firebase/firestore";
-import { db, auth } from "../firebase-config";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import { TextField, Button, Box, Grid } from "@mui/material";
+import { db, auth } from "../firebase-config";
+import { doc, updateDoc } from "firebase/firestore";
 
-export default function CreatePost({ category }) {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+export default function EditPost() {
+  const location = useLocation();
+  const [title, setTitle] = useState(location.state.title);
+  const [content, setContent] = useState(location.state.content);
   const navigate = useNavigate();
-
-  const collectionRef = collection(db, "forum-" + category);
 
   useEffect(() => {
     auth.onAuthStateChanged(function (user) {
       if (!user) {
         navigate(-1);
         alert("Please log in and try again");
-        console.log("redirected");
       }
     });
   }, []);
 
-  const postContent = async () => {
+  const editContent = async () => {
     if (!auth.currentUser) {
       navigate(-1);
       alert("Please log in and try again");
     }
-    await addDoc(collectionRef, {
+    await updateDoc(doc(db, location.state.category, location.state.id), {
       title,
       content,
-      author: { name: auth.currentUser.displayName, id: auth.currentUser.uid },
-      createdAt: new Date().toLocaleString(),
-      editedAt: null,
-      comments: {},
-      category,
-      edited: false,
+      editedAt: new Date().toLocaleString(),
+      edited: true,
     });
 
-    console.log("posted");
-
-    // navigate("/" + from);
     navigate(-1);
   };
 
@@ -61,17 +53,19 @@ export default function CreatePost({ category }) {
           <Grid item xs={12}>
             <TextField
               label="Title"
+              defaultValue={title}
               onChange={(e) => setTitle(e.target.value)}
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
+              defaultValue={content}
               multiline
               rows={10}
               onChange={(e) => setContent(e.target.value)}
             />
           </Grid>
-          <Button variant="contained" onClick={postContent}>
+          <Button variant="contained" onClick={editContent}>
             Post
           </Button>
         </Grid>
@@ -79,5 +73,3 @@ export default function CreatePost({ category }) {
     </Box>
   );
 }
-
-// npm run deploy

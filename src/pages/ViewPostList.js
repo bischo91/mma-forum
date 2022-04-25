@@ -246,14 +246,16 @@ export default function ViewPostList({ category }) {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-          <Button
-            variant="contained"
-            onClick={() => {
-              navigate(`/${category}/createpost`);
-            }}
-          >
-            Post
-          </Button>
+          {auth.currentUser && (
+            <Button
+              variant="contained"
+              onClick={() => {
+                navigate(`/${category}/createpost`);
+              }}
+            >
+              Post
+            </Button>
+          )}
         </Paper>
       </Box>
     </div>

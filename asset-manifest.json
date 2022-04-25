@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/mma-forum/static/css/main.abd64e84.css",
-    "main.js": "/mma-forum/static/js/main.fe37811a.js",
+    "main.css": "/mma-forum/static/css/main.bad0d8ef.css",
+    "main.js": "/mma-forum/static/js/main.fd86d522.js",
     "static/js/787.29de90d8.chunk.js": "/mma-forum/static/js/787.29de90d8.chunk.js",
     "index.html": "/mma-forum/index.html",
-    "main.abd64e84.css.map": "/mma-forum/static/css/main.abd64e84.css.map",
-    "main.fe37811a.js.map": "/mma-forum/static/js/main.fe37811a.js.map",
+    "main.bad0d8ef.css.map": "/mma-forum/static/css/main.bad0d8ef.css.map",
+    "main.fd86d522.js.map": "/mma-forum/static/js/main.fd86d522.js.map",
     "787.29de90d8.chunk.js.map": "/mma-forum/static/js/787.29de90d8.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.abd64e84.css",
-    "static/js/main.fe37811a.js"
+    "static/css/main.bad0d8ef.css",
+    "static/js/main.fd86d522.js"
   ]
 }

@@ -18,7 +18,7 @@ export default function EditPost() {
         alert("Please log in and try again");
       }
     });
-  }, []);
+  }, [navigate]);
 
   const editContent = async () => {
     if (!auth.currentUser) {

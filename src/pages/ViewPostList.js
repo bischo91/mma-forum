@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
@@ -124,7 +124,7 @@ export default function ViewPostList({ category }) {
 
   const uid = auth.currentUser ? auth.currentUser.uid : "";
 
-  const getContent = async () => {
+  const getContent = useCallback(async () => {
     const data = await getDocs(collectionRef);
     setContentList(
       data.docs.map((doc) => ({
@@ -133,7 +133,7 @@ export default function ViewPostList({ category }) {
         authorName: doc.data().author.name,
       }))
     );
-  };
+  }, [collectionRef]);
 
   const deleteContent = async (id) => {
     const contentDoc = doc(db, "forum-" + category, id);
@@ -143,7 +143,7 @@ export default function ViewPostList({ category }) {
 
   useEffect(() => {
     getContent();
-  }, [category]);
+  }, [getContent]);
 
   const handleRequestSort = (event, property) => {
     console.log(property);
@@ -206,13 +206,12 @@ export default function ViewPostList({ category }) {
                           scope="row"
                           style={{ height: "2rem" }}
                         >
-                          <Link to={`/${category}/${row.id}`}>{row.title}</Link>
+                          <Link to={`/${category}/${row.id}`} key={row.id}>
+                            {row.title}
+                          </Link>
                           {uid === row.author.id && (
-                            <IconButton>
-                              <DeleteIcon
-                                onClick={() => deleteContent(row.id)}
-                                style={{ fontSize: 15 }}
-                              />
+                            <IconButton onClick={() => deleteContent(row.id)}>
+                              <DeleteIcon style={{ fontSize: 15 }} />
                             </IconButton>
                           )}
                         </TableCell>

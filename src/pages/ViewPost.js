@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { db, auth } from "../firebase-config";
 import { Button, Box, TextField, Grid, IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-
-import EditPost from "./EditPost";
+import ReplyIcon from "@mui/icons-material/Reply";
 
 export default function ViewPost() {
   const [postContent, setPostContent] = useState({
@@ -24,20 +23,18 @@ export default function ViewPost() {
   const category = "forum-" + location.pathname.split("/")[1];
   const id = location.pathname.split("/")[2];
 
-  const getPost = async () => {
+  const getPost = useCallback(async () => {
     const data = await getDoc(doc(db, category, id));
-    console.log(data.id);
     setPostContent({
       ...data.data(),
       id,
       category,
     });
-  };
+  }, [id, category]);
 
   useEffect(() => {
     getPost();
-    console.log(postContent);
-  }, []);
+  }, [getPost]);
 
   const submitComment = async (e) => {
     const maxIndex = Math.max.apply(
@@ -54,7 +51,7 @@ export default function ViewPost() {
         },
         commentContent: commentText,
         timestamp: new Date().toLocaleString(),
-        comments: {},
+        reply: {},
       },
     });
 
@@ -121,7 +118,7 @@ export default function ViewPost() {
             {postContent.title}
             {auth.currentUser?.uid === postContent.author.id && (
               <Link to={`${location.pathname}/edit`} state={postContent}>
-                Edit
+                edit
               </Link>
             )}
           </Box>
@@ -158,19 +155,18 @@ export default function ViewPost() {
                   {auth.currentUser?.uid ===
                     postContent.comments[key].author.id && (
                     <>
-                      <IconButton>
-                        <DeleteIcon
-                          style={{ fontSize: 15 }}
-                          onClick={() => deleteComment(key)}
-                        />
+                      <IconButton onClick={() => deleteComment(key)}>
+                        <DeleteIcon style={{ fontSize: 15 }} />
                       </IconButton>
-                      <IconButton>
-                        <EditIcon
-                          style={{ fontSize: 15 }}
-                          onClick={() => setEditComment(key)}
-                        />
+                      <IconButton onClick={() => setEditComment(key)}>
+                        <EditIcon style={{ fontSize: 15 }} />
                       </IconButton>
                     </>
+                  )}
+                  {auth.currentUser?.uid && (
+                    <IconButton>
+                      <ReplyIcon style={{ fontSize: 15 }} />
+                    </IconButton>
                   )}
                 </Box>
               </Grid>

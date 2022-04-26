@@ -4,6 +4,8 @@ import { addDoc, collection } from "firebase/firestore";
 import { db, auth } from "../firebase-config";
 import { TextField, Button, Box, Grid } from "@mui/material";
 
+// https://dev.to/itnext/how-to-do-image-upload-with-firebase-in-react-cpj
+
 export default function CreatePost({ category }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -12,14 +14,15 @@ export default function CreatePost({ category }) {
   const collectionRef = collection(db, "forum-" + category);
 
   useEffect(() => {
+    console.log("effect create");
     auth.onAuthStateChanged(function (user) {
       if (!user) {
-        navigate(-1);
         alert("Please log in and try again");
         console.log("redirected");
+        navigate(-1);
       }
     });
-  }, []);
+  }, [navigate]);
 
   const postContent = async () => {
     if (!auth.currentUser) {
@@ -39,7 +42,6 @@ export default function CreatePost({ category }) {
 
     console.log("posted");
 
-    // navigate("/" + from);
     navigate(-1);
   };
 

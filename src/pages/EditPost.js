@@ -12,6 +12,7 @@ export default function EditPost() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("effect Edit");
     auth.onAuthStateChanged(function (user) {
       if (!user) {
         navigate(-1);

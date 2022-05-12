@@ -17,7 +17,9 @@ export default function ViewPost() {
     comments: {},
   });
   const [commentText, setCommentText] = useState("");
+  const [replyText, setReplyText] = useState("");
   const [editCommentKey, setEditComment] = useState(-1);
+  const [replyCommentKey, setReplyComment] = useState(-1);
   const location = useLocation();
 
   const category = "forum-" + location.pathname.split("/")[1];
@@ -97,6 +99,27 @@ export default function ViewPost() {
     setEditComment(-1);
   };
 
+  const submitReply = async (e) => {
+    if (!auth.currentUser) {
+      alert("Please log in and try agagin");
+    } else {
+      const newReply = {
+        author: {
+          id: auth.currentUser.uid,
+          name: auth.currentUser.displayName,
+        },
+        replyContent: replyText,
+        timestamp: new Date().toLocaleString(),
+      };
+      postContent.comments[replyCommentKey].reply = newReply;
+      setPostContent({ ...postContent });
+      await updateDoc(doc(db, category, id), {
+        comments: postContent.comments,
+      });
+    }
+    setReplyText("");
+  };
+
   return (
     <Box
       backgroundColor="primary.main"
@@ -164,13 +187,17 @@ export default function ViewPost() {
                     </>
                   )}
                   {auth.currentUser?.uid && (
-                    <IconButton>
+                    <IconButton
+                      onClick={() => {
+                        setReplyComment(key);
+                      }}
+                    >
                       <ReplyIcon style={{ fontSize: 15 }} />
                     </IconButton>
                   )}
                 </Box>
               </Grid>
-              {editCommentKey === key ? (
+              {editCommentKey === key || replyCommentKey === key ? (
                 <Grid container>
                   <Grid item xs={8}>
                     <TextField
@@ -185,14 +212,24 @@ export default function ViewPost() {
                     />
                   </Grid>
                   <Grid item xs={4}>
-                    <Button variant="contained" onClick={editComment}>
-                      Edit
-                    </Button>
+                    {editCommentKey === key ? (
+                      <Button variant="contained" onClick={editComment}>
+                        Edit
+                      </Button>
+                    ) : replyCommentKey === key ? (
+                      <Button variant="contained" onClick={submitReply}>
+                        Reply
+                      </Button>
+                    ) : (
+                      <></>
+                    )}
                     <Button
                       variant="contained"
                       onClick={() => {
                         setEditComment(-1);
+                        setReplyComment(-1);
                         setCommentText("");
+                        setReplyText("");
                       }}
                     >
                       Cancel
